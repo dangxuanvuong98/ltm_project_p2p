@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-void InitConnetion(NODE newNode)
+/*void InitConnetion(NODE newNode)
 {
 	char buf[16];
 
@@ -50,5 +50,4 @@ void Disconnect(NODE newNode)
 	LeaveCriticalSection(&criticalSection);
 
 	printf("Peer %s:%d da ngat ket noi\n", inet_ntoa(newNode.addr.sin_addr), ntohs(newNode.addr.sin_port));
-	fprintf(trackerLog, "Peer %s:%d da ngat ket noi\n", inet_ntoa(newNode.addr.sin_addr), ntohs(newNode.addr.sin_port));
-}
+}*/

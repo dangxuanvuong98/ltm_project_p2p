@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-DWORD WINAPI SleepPeerThread(LPVOID lpParam)
+/*DWORD WINAPI SleepPeerThread(LPVOID lpParam)
 {
 	int ret;
 
@@ -30,17 +30,7 @@ DWORD WINAPI SleepPeerThread(LPVOID lpParam)
 		{
 			if (FD_ISSET(it->socket, &readfds))
 			{
-				peerThreadParam = PEER_THREAD_PARAM();
-
-				peerThreadParam.requestNode = *it;
-				peerThreadParam.requestNode.sleep = false;
-
-				onlinePeer.erase(peerThreadParam.requestNode);
-				onlinePeer.insert(peerThreadParam.requestNode);
-
-				CreateThread(0, 0, PriorityPeerThread, &peerThreadParam, 0, 0);
-				while (peerThreadParam.pause);
 			}
 		}
 	}
-}
+}*/

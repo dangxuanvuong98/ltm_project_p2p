@@ -156,13 +156,12 @@
     <ClInclude Include="Tracker.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Handle.cpp" />
-    <ClCompile Include="InitTracker.cpp" />
+    <ClCompile Include="RequestProcessing.cpp" />
+    <ClCompile Include="EntryPoint.cpp" />
     <ClCompile Include="IO.cpp" />
     <ClCompile Include="md5.cpp" />
-    <ClCompile Include="PeerPriorityThread.cpp" />
+    <ClCompile Include="ListenToRequest.cpp" />
     <ClCompile Include="rsa.cpp" />
-    <ClCompile Include="SleepPeerThread.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

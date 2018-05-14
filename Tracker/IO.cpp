@@ -1,21 +1,21 @@
 #include "stdafx.h"
 
-void SendPack(NODE node, int cmd, char *buf, int len)
+/*void SendPack(NODE node, int cmd, char *buf, int len)
 {
-	struct OFFLINE_PACKAGE tmpPack;
+	struct OFFPACK tmpPack;
 	memset(&tmpPack, 0, sizeof(tmpPack));
 	tmpPack.cmdCode = cmd;
 	memcpy(tmpPack.data, buf, len);
-	struct ONLINE_PACKAGE sendPack;
+	struct ONLPACK sendPack;
 	memset(&sendPack, 0, sizeof(sendPack));
 	memcpy(sendPack.md5Code, md5((char*)&tmpPack).c_str(), 32);
 	rsaenc((char *)&tmpPack, sendPack.data, node.rsaKey, sizeof(tmpPack));
-	send(node.socket, (char *)&sendPack, sizeof(sendPack), 0);
+	send(listener.socket, (char *)&sendPack, sizeof(sendPack), 0);
 }
 
-int RecvPack(NODE sourcenode, OFFLINE_PACKAGE &recvPack)
+int RecvPack(NODE sourcenode, OFFPACK &recvPack)
 {
-	struct ONLINE_PACKAGE tmpPack;
+	struct ONLPACK tmpPack;
 	memset(&tmpPack, 0, sizeof(tmpPack));
 	memset(&recvPack, 0, sizeof(recvPack));
 	int ret = recv(sourcenode.socket, (char *)&tmpPack, sizeof(tmpPack), 0);
@@ -23,7 +23,7 @@ int RecvPack(NODE sourcenode, OFFLINE_PACKAGE &recvPack)
 	{
 		return ret;
 	}
-	rsadec((char *)&(tmpPack.data), (char *)&recvPack, myNode.rsaKey, sizeof(tmpPack));
+	rsadec((char *)&(tmpPack.data), (char *)&recvPack, listener.rsaKey, sizeof(tmpPack));
 	char tmp[32];
 	memcpy(tmp, md5((char*)&recvPack).c_str(), 32);
 	if (strncmp(tmp, tmpPack.md5Code, 32) != 0)
@@ -31,7 +31,7 @@ int RecvPack(NODE sourcenode, OFFLINE_PACKAGE &recvPack)
 		recvPack.cmdCode = -1;
 	}
 	return 0;
-}
+}*/
 
 void rsaenc(char * ori, char * enc, unsigned long long int *key, unsigned long int len)
 {

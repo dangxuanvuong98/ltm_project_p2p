@@ -25,18 +25,12 @@
     <Filter Include="Source Files\Encryption">
       <UniqueIdentifier>{ce3cdcf6-85c1-45f5-b5f8-c0c99f186a47}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\System Headers">
+      <UniqueIdentifier>{71f7d9d5-c288-4258-b76f-6ca24738f0c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Peer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="stdc++.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="md5.h">
@@ -44,6 +38,15 @@
     </ClInclude>
     <ClInclude Include="rsa.h">
       <Filter>Header Files\Encrypt</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files\System Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="stdc++.h">
+      <Filter>Header Files\System Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files\System Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

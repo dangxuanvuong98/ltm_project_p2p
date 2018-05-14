@@ -1,6 +1,6 @@
 #pragma once
 
-//Define Constants and Macro
+//Define Constants and Macros
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 
 #define TRACKER_DEFAULT_PORT 9000
@@ -17,6 +17,9 @@
 #define UPLOAD 3
 #define UPLOAD_SUCCESS UPLOAD
 #define UPLOAD_FAIL -UPLOAD
+#define MAX_PEER 1024
+#define MAX_LENGTH 1024
+#define FINISH_RESPONSE 9999
 
 
 
@@ -27,77 +30,118 @@
 #include <WinSock2.h>
 #include <Windows.h>
 
+using namespace std;
+
 
 //Define Datatypes
-struct OFFLINE_PACKAGE
+
+//Define cac cau truc goi tin:
+//OFFPACK - Goi tin chua duoc ma hoa/ da duoc giai ma - duoc su dung noi bo
+//ONLPACK - Goi tin da duoc ma hoa - duoc su dung de truyen tin
+struct OFFPACK
 {
 	long long int cmdCode;
 	char data[4096];
 };
 
-struct ONLINE_PACKAGE
+struct ONLPACK
 {
 	char md5Code[32];
 	char data[8208];
 };
 
+//Define cau truc luu tru thong tin cac node mang
+//username - ten tai khoan ung voi node, username = "" neu peer chua dang nhap hoac node do la tracker
+//addr - dia chi cua node
+//rsaKey - public key cua node, cac node khac su dung key nay de ma hoa du lieu truoc khi truyen (n = resKey[0], e = rsaKey[1])
+//CONNECTION - Cau truc anh xa socket va node tuong ung
+//MY_INFO - Cau truc luu tru cac thong tin cua listener
 struct NODE
 {
-	bool sleep, login;
-	SOCKET socket;
+	char username[32];
 	SOCKADDR_IN addr;
-	char sessionKey[16];
+	unsigned long long int rsaKey[2];
+	bool busy;
+};
+
+typedef map<SOCKET, NODE> CONNECTION;
+
+struct LISTENER
+{
+	SOCKET s;
+	SOCKADDR_IN addr;
 	unsigned long long int rsaKey[3];
 };
 
+//Define cau truc du lieu de truyen vao luong xu ly moi
+//Bien pause khien luong cu tam dung cho den khi luong duoc tao nhan duoc thong tin ve socket
 struct PEER_THREAD_PARAM
 {
-	NODE requestNode;
+	SOCKET socket;
 	bool pause;
-	PEER_THREAD_PARAM()
-	{
-		this->pause = true;
-	}
 };
 
-typedef std::map<std::string, std::string> USER_INFORMATION;
-typedef std::map<std::string, std::string> FILE_INFORMATION;
+//Define cau truc luu tru thong tin cua file
+//BLOCK - luu tru thong tin mot khoi tin
+//checksum - ma md5 cua BLOCK/ FILE
+struct BLOCK
+{
+	char checksum[32];
+	SOCKET local[MAX_PEER];
+};
 
+struct FILE_INFO
+{
+	char name[32];
+	unsigned length;
+	char checksum[32];
+	BLOCK block[MAX_LENGTH];
+};
 
+//Cac cau truc khac
+typedef map<string, string> USER;
 
 //Declare Functions
-void InitTracker();
-DWORD WINAPI PriorityPeerThread(LPVOID lpParam);
-DWORD WINAPI SleepPeerThread(LPVOID lpParam);
 
-void SendPack(NODE node, int cmd, char *buf, int len);
-int RecvPack(NODE sourcenode, OFFLINE_PACKAGE &recvPack);
+//Overload operator
+bool operator<(FILE_INFO lhs, FILE_INFO rhs)
+{
+	return (strncmp(lhs.name, rhs.name, 32) < 0);
+}
 
-bool operator <(NODE lhs, NODE rhs);
+//Declare cac ham phu trach viec ket noi
+//InitTracker - Khoi tao tracker, dua tracker vao trang thai san sang lam viec
+//WaitForNewConnection - Cho doi ket noi moi, yeu cau dang nhap va gui thong tin dang nhap den cac Peer khac
+//WaitForRequest - Cho doi request tu cac peer da dang nhap va gui thong tin den cac peer con lai
+void InitListener(LISTENER &listener);
+DWORD WINAPI WaitForNewConnection(LPVOID lpParam);
+DWORD WINAPI WaitForRequest(LPVOID lpParam);
 
-void InitConnetion(NODE newNode);
-void Disconnect(NODE newNode);
 
-void HandleRegister(NODE reqNode, OFFLINE_PACKAGE recvPack);
-void HandleLogin(NODE reqNode, OFFLINE_PACKAGE recvPack);
-void HandleUpdate(NODE reqNode, OFFLINE_PACKAGE recvPack);
-void HandleCreate(NODE reqNode, OFFLINE_PACKAGE recvPack);
-void HandleEdit(NODE reqNode, OFFLINE_PACKAGE recvPack);
-void HandleDelete(NODE reqNode, OFFLINE_PACKAGE recvPack);
-void HandleDownload(NODE reqNode, OFFLINE_PACKAGE recvPack);
+//Declare cac ham vao ra
+//SendPack - Ma hoa mot OFFPACK thanh ONLPACK va gui den dia chi dich
+//RecvPack - Nhan mot ONLPACK va giai ma thanh OFFPACK
+void SendPack(SOCKET s, int cmd, char *buf, int len);
+int RecvPack(SOCKET s, OFFPACK &recvPack);
+
+//Declare cac ham xu ly: Register, Login, Update
+void HandleRegister(SOCKET s, OFFPACK recvPack);
+void HandleLogin(SOCKET s, OFFPACK recvPack);
+void HandleUpload(SOCKET s, OFFPACK recvPack);
+void HandleUpdate(SOCKET s, OFFPACK recvPack);
+
+//Declare cac ham ma hoa rsa
+int UpdateKey(unsigned long long int *rsaKey);
+void rsaenc(char * ori, char * enc, unsigned long long int * key, unsigned long int len);
+void rsadec(char * enc, char * ori, unsigned long long int * key, unsigned long int len);
 
 //Declare Extern Variables
-extern USER_INFORMATION userInformation;
-extern FILE_INFORMATION fileInformation;
+extern LISTENER listener;
 
-extern int numberUser;
-extern int numberFile;
+extern USER userList;
+extern set<FILE_INFO> fileList;
 
-extern NODE myNode;
-
-extern std::set<NODE> onlinePeer;
+extern CONNECTION onlinePeer;
 extern int onlinePeerAmount;
 
 extern CRITICAL_SECTION criticalSection;
-
-extern FILE *trackerLog;

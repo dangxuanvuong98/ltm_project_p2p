@@ -16,25 +16,40 @@
     <Filter Include="IO File">
       <UniqueIdentifier>{a7353c22-c0cd-4477-a438-dc078ac889d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Encryption">
+      <UniqueIdentifier>{61d8fafd-1bc0-477d-a52a-d8e532def272}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Connection">
+      <UniqueIdentifier>{e3149f17-647e-47ab-a75b-f5a2c86243b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Encryption">
+      <UniqueIdentifier>{aeb97ac9-f47e-456d-a95f-75777670c901}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Handler">
+      <UniqueIdentifier>{cc002044-99b2-49dd-a9ae-7ba0ac5779fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\System Headers">
+      <UniqueIdentifier>{f2757832-666b-40cd-b3a4-d5f41dd7ee38}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="stdc++.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Tracker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="md5.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Encryption</Filter>
     </ClInclude>
     <ClInclude Include="rsa.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Encryption</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files\System Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="stdc++.h">
+      <Filter>Header Files\System Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files\System Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -44,26 +59,23 @@
     <ClCompile Include="Tracker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PeerPriorityThread.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SleepPeerThread.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="InitTracker.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="md5.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Encryption</Filter>
     </ClCompile>
     <ClCompile Include="rsa.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Encryption</Filter>
+    </ClCompile>
+    <ClCompile Include="RequestProcessing.cpp">
+      <Filter>Source Files\Handler</Filter>
     </ClCompile>
     <ClCompile Include="IO.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Handler</Filter>
     </ClCompile>
-    <ClCompile Include="Handle.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="ListenToRequest.cpp">
+      <Filter>Source Files\Connection</Filter>
+    </ClCompile>
+    <ClCompile Include="EntryPoint.cpp">
+      <Filter>Source Files\Connection</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
