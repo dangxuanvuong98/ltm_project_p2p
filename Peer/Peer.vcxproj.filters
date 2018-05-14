@@ -13,6 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Encrypt">
+      <UniqueIdentifier>{683956b2-0d56-4491-8b72-0268415cbd26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Connection">
+      <UniqueIdentifier>{3bb94654-a6d0-4d5d-995c-7aa82d7521f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Handler">
+      <UniqueIdentifier>{b178f317-4489-4541-8712-5248cbfab313}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Encryption">
+      <UniqueIdentifier>{ce3cdcf6-85c1-45f5-b5f8-c0c99f186a47}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -28,10 +40,10 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="md5.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Encrypt</Filter>
     </ClInclude>
     <ClInclude Include="rsa.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Encrypt</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -41,29 +53,23 @@
     <ClCompile Include="Peer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GoOnline.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="IO.cpp">
+      <Filter>Source Files\Handler</Filter>
     </ClCompile>
-    <ClCompile Include="Variable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Handle.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="RequestProcessing.cpp">
+      <Filter>Source Files\Handler</Filter>
     </ClCompile>
     <ClCompile Include="md5.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Encryption</Filter>
     </ClCompile>
     <ClCompile Include="rsa.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Encryption</Filter>
     </ClCompile>
-    <ClCompile Include="IO.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="toTracker.cpp">
+      <Filter>Source Files\Connection</Filter>
     </ClCompile>
-    <ClCompile Include="Connection.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="toPeer.cpp">
+      <Filter>Source Files\Connection</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -156,12 +156,11 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Connection.cpp" />
-    <ClCompile Include="GoOnline.cpp" />
-    <ClCompile Include="Handle.cpp" />
+    <ClCompile Include="toTracker.cpp" />
+    <ClCompile Include="toPeer.cpp" />
+    <ClCompile Include="RequestProcessing.cpp" />
     <ClCompile Include="IO.cpp" />
     <ClCompile Include="md5.cpp" />
-    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Peer.cpp" />
     <ClCompile Include="rsa.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -170,7 +169,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Variable.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
