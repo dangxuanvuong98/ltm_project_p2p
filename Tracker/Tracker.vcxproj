@@ -156,11 +156,11 @@
     <ClInclude Include="Tracker.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="RequestProcessing.cpp" />
-    <ClCompile Include="EntryPoint.cpp" />
-    <ClCompile Include="IO.cpp" />
+    <ClCompile Include="HandleRequest.cpp" />
+    <ClCompile Include="ConnectionControl.cpp" />
+    <ClCompile Include="HandleIO.cpp" />
     <ClCompile Include="md5.cpp" />
-    <ClCompile Include="ListenToRequest.cpp" />
+    <ClCompile Include="RequestControl.cpp" />
     <ClCompile Include="rsa.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

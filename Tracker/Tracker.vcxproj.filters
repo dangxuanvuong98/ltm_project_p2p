@@ -65,16 +65,16 @@
     <ClCompile Include="rsa.cpp">
       <Filter>Source Files\Encryption</Filter>
     </ClCompile>
-    <ClCompile Include="RequestProcessing.cpp">
-      <Filter>Source Files\Handler</Filter>
-    </ClCompile>
-    <ClCompile Include="IO.cpp">
-      <Filter>Source Files\Handler</Filter>
-    </ClCompile>
-    <ClCompile Include="ListenToRequest.cpp">
+    <ClCompile Include="ConnectionControl.cpp">
       <Filter>Source Files\Connection</Filter>
     </ClCompile>
-    <ClCompile Include="EntryPoint.cpp">
+    <ClCompile Include="HandleIO.cpp">
+      <Filter>Source Files\Handler</Filter>
+    </ClCompile>
+    <ClCompile Include="HandleRequest.cpp">
+      <Filter>Source Files\Handler</Filter>
+    </ClCompile>
+    <ClCompile Include="RequestControl.cpp">
       <Filter>Source Files\Connection</Filter>
     </ClCompile>
   </ItemGroup>
