@@ -1,9 +1,12 @@
 #include "stdafx.h"
 
+//Khoi tao listener
 void InitListener(LISTENER &listener)
 {
+	//Tao bo ma hoa
 	CreateKey(listener.rsaKey);
 
+	//Nhap thong tin user
 	FILE *f;
 	do
 	{
@@ -29,7 +32,7 @@ void InitListener(LISTENER &listener)
 	}
 	fclose(f);
 
-	//Khoi tao socket
+	//Khoi tao listener
 	WSADATA wsaData;
 	WSAStartup(MAKEWORD(2, 2), &wsaData);
 
@@ -47,6 +50,7 @@ void InitListener(LISTENER &listener)
 	printf("Server da san sang\n");
 }
 
+//Cho doi ket noi moi
 DWORD WINAPI WaitForNewConnection(LPVOID lpParam)
 {
 	NODE newPeer;
@@ -59,6 +63,7 @@ DWORD WINAPI WaitForNewConnection(LPVOID lpParam)
 		newConnection.s = accept(listener.s, (SOCKADDR FAR*)&newPeer.addr, &len);
 		strcpy(newPeer.username, "");
 		onlinePeer[newConnection.s] = newPeer;
+		onlinePeer[newConnection.s].connecting = true;
 		newConnection.pause = true;
 		CreateThread(0, 0, SetupConnection, &newConnection, 0, 0);
 		while (newConnection.pause);
@@ -67,24 +72,25 @@ DWORD WINAPI WaitForNewConnection(LPVOID lpParam)
 	return 0;
 }
 
+//Thiet lap cho ket noi moi
 DWORD WINAPI SetupConnection(LPVOID lpParam)
 {
-	EnterCriticalSection(&criticalSection);
 	SOCKET s = ((THREAD_PARAM FAR*)lpParam)->s;
 	((THREAD_PARAM FAR*)lpParam)->pause = false;
-	LeaveCriticalSection(&criticalSection);
 
 	char buf[16];
 
+	//Gui public key den peer
 	memcpy(buf, (char*)(listener.rsaKey), sizeof(buf));
 	send(s, buf, 16, 0);
 
 	fd_set readfds;
-	timeval limit = { 10,0 };
+	timeval limit = { 1,0 };
 	
 	FD_ZERO(&readfds);
 	FD_SET(s, &readfds);
 
+	//Nhan public key cua peer
 	int ret = select(0, &readfds, NULL, NULL, &limit);
 	if (ret <= 0)
 	{
@@ -99,11 +105,19 @@ DWORD WINAPI SetupConnection(LPVOID lpParam)
 		return 0;
 	}
 
+	EnterCriticalSection(&criticalSection);
+
 	memcpy((char*)(onlinePeer[s].rsaKey), buf, sizeof(buf));
+
+	//Chuyen peer sang trang thai co the tiep nhan ket noi
+	onlinePeer[s].connecting = false;
+
+	LeaveCriticalSection(&criticalSection);
 
 	return 0;
 }
 
+//Ngat ket noi voi socket s
 void Disconnect(SOCKET s)
 {
 	EnterCriticalSection(&criticalSection);

@@ -14,9 +14,12 @@
 #define LOGIN 2
 #define LOGIN_SUCCESS LOGIN
 #define LOGIN_FAIL -LOGIN
-#define UPLOAD 3
-#define UPLOAD_SUCCESS UPLOAD
-#define UPLOAD_FAIL -UPLOAD
+#define GET 3
+#define GET_SUCCESS GET
+#define GET_FAIL -GET
+#define POST 4
+#define POST_SUCCESS POST
+#define POST_FAIL -POST
 #define MAX_PEER 1024
 #define MAX_LENGTH 1024
 #define FINISH_RESPONSE 9999
@@ -124,6 +127,8 @@ DWORD WINAPI WaitForNewConnection(LPVOID lpParam);
 DWORD WINAPI WaitForRequest(LPVOID lpParam);
 //Thiet lap ket noi ban dau giua peer va tracker
 DWORD WINAPI SetupConnection(LPVOID lpParam);
+//Dieu huong xu ly request
+DWORD WINAPI RequestControl(LPVOID lpParam);
 //Huy ket noi voi mot socket
 void Disconnect(SOCKET s);
 
@@ -131,7 +136,7 @@ void Disconnect(SOCKET s);
 //Declare cac ham vao ra
 
 //SendPack - Ma hoa mot OFFPACK thanh ONLPACK va gui den dia chi dich
-void SendPack(SOCKET s, int cmd, char *buf, int len);
+void SendPack(SOCKET s, OFFPACK sendPack, int len);
 //RecvPack - Nhan mot ONLPACK va giai ma thanh OFFPACK
 int RecvPack(SOCKET s, OFFPACK &recvPack);
 
@@ -142,9 +147,9 @@ void HandleRegister(SOCKET s, OFFPACK recvPack);
 //Xy ly yeu cau dang nhap
 void HandleLogin(SOCKET s, OFFPACK recvPack);
 //Xu ly yeu cap nhat thong tin (get thong tin tu tracker xuong)
-void HandleUpload(SOCKET s, OFFPACK recvPack);
+void HandlePost(SOCKET s, OFFPACK recvPack);
 //Xy ly yeu cau cap nhat thong tin (post thong tin tu peer len)
-void HandleUpdate(SOCKET s, OFFPACK recvPack);
+void HandleGet(SOCKET s, OFFPACK recvPack);
 
 //Declare cac ham ma hoa rsa
 

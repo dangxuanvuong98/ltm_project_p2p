@@ -1,37 +1,44 @@
 #include "stdafx.h"
 
-/*void SendPack(NODE node, int cmd, char *buf, int len)
+void SendPack(SOCKET s, OFFPACK sendPack, int len)
 {
-	struct OFFPACK tmpPack;
-	memset(&tmpPack, 0, sizeof(tmpPack));
-	tmpPack.cmdCode = cmd;
-	memcpy(tmpPack.data, buf, len);
-	struct ONLPACK sendPack;
-	memset(&sendPack, 0, sizeof(sendPack));
-	memcpy(sendPack.md5Code, md5((char*)&tmpPack).c_str(), 32);
-	rsaenc((char *)&tmpPack, sendPack.data, node.rsaKey, sizeof(tmpPack));
-	send(listener.socket, (char *)&sendPack, sizeof(sendPack), 0);
+	if (len > sizeof(sendPack.data))
+	{
+		return;
+	}
+
+	int buflen = sizeof(sendPack.cmdCode) + len;
+
+	ONLPACK encryptPack;
+	memset(&encryptPack, 0, sizeof(encryptPack));
+
+	memcpy(encryptPack.md5Code, md5((char*)&sendPack).c_str(), 32);
+	rsaenc((char *)&encryptPack.data, (char *)&sendPack, onlinePeer[s].rsaKey, buflen);
+	send(s, (char *)&encryptPack, 2*buflen, 0);
 }
 
-int RecvPack(NODE sourcenode, OFFPACK &recvPack)
+int RecvPack(SOCKET s, OFFPACK &recvPack)
 {
-	struct ONLPACK tmpPack;
-	memset(&tmpPack, 0, sizeof(tmpPack));
-	memset(&recvPack, 0, sizeof(recvPack));
-	int ret = recv(sourcenode.socket, (char *)&tmpPack, sizeof(tmpPack), 0);
+	ONLPACK encryptPack;
+	memset(&encryptPack, 0, sizeof(encryptPack));
+
+	int ret = recv(s, (char *)&encryptPack, sizeof(encryptPack), 0);
 	if (ret == SOCKET_ERROR)
 	{
-		return ret;
+		Disconnect(s);
 	}
-	rsadec((char *)&(tmpPack.data), (char *)&recvPack, listener.rsaKey, sizeof(tmpPack));
+
+	memset(&recvPack, 0, sizeof(recvPack));
+	rsadec((char *)&(encryptPack.data), (char *)&recvPack, onlinePeer[s].rsaKey, ret);
+
 	char tmp[32];
 	memcpy(tmp, md5((char*)&recvPack).c_str(), 32);
-	if (strncmp(tmp, tmpPack.md5Code, 32) != 0)
+	if (strncmp(tmp, encryptPack.md5Code, 32) != 0)
 	{
-		recvPack.cmdCode = -1;
+		recvPack.cmdCode = ERROR_CMD;
 	}
 	return 0;
-}*/
+}
 
 void rsaenc(char * ori, char * enc, unsigned long long int *key, unsigned long int len)
 {
