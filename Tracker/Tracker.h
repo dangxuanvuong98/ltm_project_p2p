@@ -24,6 +24,11 @@
 #define MAX_LENGTH 1024
 #define FINISH_RESPONSE 9999
 
+#define GET_ALL 1
+#define GET_ONLINE_PEER 2
+#define GET_FILE_LIST 4
+#define GET_FILE_INFORMATION 8
+
 
 
 //Include Headers
