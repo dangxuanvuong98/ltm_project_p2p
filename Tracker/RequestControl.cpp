@@ -24,13 +24,14 @@ DWORD WINAPI WaitForRequest(LPVOID lpParam)
 		}
 		LeaveCriticalSection(&criticalSection);
 
-		ret = select(0, &readfds, NULL, NULL, &timeout);
+		ret = select(0, &readfds, NULL, NULL, NULL);
 
 		for (it = onlinePeer.begin(); it != onlinePeer.end(); it++)
 		{
 			if (FD_ISSET(it->first, &readfds))
 			{
 				newRequest.pause = true;
+				newRequest.s = it->first;
 				CreateThread(0, 0, RequestControl, &newRequest, 0, 0);
 				while (newRequest.pause);
 			}

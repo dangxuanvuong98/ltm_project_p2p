@@ -7,7 +7,7 @@ void SendPack(SOCKET s, OFFPACK sendPack, int len)
 		return;
 	}
 
-	int buflen = sizeof(sendPack.cmdCode) + len;
+	unsigned long int buflen = sizeof(sendPack.cmdCode) + len;
 
 	ONLPACK encryptPack;
 	memset(&encryptPack, 0, sizeof(encryptPack));
@@ -22,14 +22,14 @@ int RecvPack(SOCKET s, OFFPACK &recvPack)
 	ONLPACK encryptPack;
 	memset(&encryptPack, 0, sizeof(encryptPack));
 
-	int ret = recv(s, (char *)&encryptPack, sizeof(encryptPack), 0);
+	unsigned long int ret = recv(s, (char *)&encryptPack, sizeof(encryptPack), 0);
 	if (ret == SOCKET_ERROR)
 	{
 		Disconnect(s);
 	}
 
 	memset(&recvPack, 0, sizeof(recvPack));
-	rsadec((char *)&(encryptPack.data), (char *)&recvPack, onlinePeer[s].rsaKey, ret);
+	rsadec((char *)&(encryptPack.data), (char *)&recvPack, listener.rsaKey, ret);
 
 	char tmp[32];
 	memcpy(tmp, md5((char*)&recvPack).c_str(), 32);
@@ -44,7 +44,7 @@ void rsaenc(char * ori, char * enc, unsigned long long int *key, unsigned long i
 {
 	unsigned short int *a = (unsigned short int *)ori;
 	unsigned long int *b = (unsigned long int *)enc;
-	int l = len / 2;
+	unsigned long int l = len / 2;
 	for (int i = 0; i < l; i++)
 	{
 		b[i] = encrypt(key[0], key[1], a[i]);
@@ -55,7 +55,7 @@ void rsadec(char * enc, char * ori, unsigned long long int *key, unsigned long i
 {
 	unsigned long int *a = (unsigned long int *)enc;
 	unsigned short int *b = (unsigned short int *)ori;
-	int l = len / 4;
+	unsigned long int l = len / 4;
 	for (int i = 0; i < l; i++)
 	{
 		b[i] = decrypt(key[0], key[2], a[i]);

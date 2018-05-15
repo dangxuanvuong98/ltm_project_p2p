@@ -33,8 +33,6 @@
 #include <WinSock2.h>
 #include <Windows.h>
 
-using namespace std;
-
 
 //Define Datatypes
 
@@ -67,7 +65,7 @@ struct NODE
 };
 
 //CONNECTION - Cau truc anh xa socket va node tuong ung
-typedef map<SOCKET, NODE> CONNECTION;
+typedef std::map<SOCKET, NODE> CONNECTION;
 
 //Define cau truc du lieu de luu tru thong tin listener
 struct LISTENER
@@ -108,7 +106,7 @@ struct FILE_INFO
 //Cac cau truc khac
 
 //Cau truc luu truc thong tin nguoi dung: map tu tai khoan sang mat khau
-typedef map<string, string> USER;
+typedef std::map<std::string, std::string> USER;
 
 //Declare Functions
 
@@ -169,7 +167,7 @@ extern LISTENER listener;
 extern USER userList;
 
 //Luu tru danh sach file
-extern set<FILE_INFO> fileList;
+extern std::set<FILE_INFO> fileList;
 
 //Danh sach cac Peer dang online
 extern CONNECTION onlinePeer;

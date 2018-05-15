@@ -8,15 +8,14 @@ void InitListener(LISTENER &listener)
 
 	//Nhap thong tin user
 	FILE *f;
-	do
+	
+	f = fopen("user.dat", "r");
+	if (f == NULL)
 	{
+		f = fopen("user.dat", "w");
+		fclose(f);
 		f = fopen("user.dat", "r");
-		if (f == NULL)
-		{
-			f = fopen("user.dat", "w");
-			fclose(f);
-		}
-	} while (true);
+	}
 
 	char user[32], pass[32];
 	int ret;
@@ -43,11 +42,10 @@ void InitListener(LISTENER &listener)
 	listener.addr.sin_family = AF_INET;
 
 	bind(listener.s, (SOCKADDR FAR*)&listener.addr, sizeof(listener.addr));
+	listen(listener.s, 1024);
 
 	onlinePeerAmount = 0;
-	
-	listen(listener.s, 1024);
-	printf("Server da san sang\n");
+	printf("Server da san sang o cong %s:%d\n", inet_ntoa(listener.addr.sin_addr), ntohs(listener.addr.sin_port));
 }
 
 //Cho doi ket noi moi
@@ -55,16 +53,18 @@ DWORD WINAPI WaitForNewConnection(LPVOID lpParam)
 {
 	NODE newPeer;
 	THREAD_PARAM newConnection;
-	int len = sizeof(newPeer.addr);
+	int len;
 
 	while (true)
 	{
 		newPeer.addr = { 0 };
-		newConnection.s = accept(listener.s, (SOCKADDR FAR*)&newPeer.addr, &len);
+		len = sizeof(newPeer.addr);
+		newConnection.s = accept(listener.s, (SOCKADDR FAR*)&(newPeer.addr), &len);
 		strcpy(newPeer.username, "");
 		onlinePeer[newConnection.s] = newPeer;
 		onlinePeer[newConnection.s].connecting = true;
 		newConnection.pause = true;
+		printf("Co mot ket noi moi %s:%d\n", inet_ntoa(newPeer.addr.sin_addr), ntohs(newPeer.addr.sin_port));
 		CreateThread(0, 0, SetupConnection, &newConnection, 0, 0);
 		while (newConnection.pause);
 	}
@@ -107,7 +107,7 @@ DWORD WINAPI SetupConnection(LPVOID lpParam)
 
 	EnterCriticalSection(&criticalSection);
 
-	memcpy((char*)(onlinePeer[s].rsaKey), buf, sizeof(buf));
+	memcpy((char*)(listener.rsaKey), buf, sizeof(buf));
 
 	//Chuyen peer sang trang thai co the tiep nhan ket noi
 	onlinePeer[s].connecting = false;
