@@ -128,7 +128,40 @@ void HandlePost(SOCKET s, OFFPACK recvPack)
 
 		if (code == I_HAVE_A_BLOCK)
 		{
+			int fileindex, blockindex;
+			char md5code[33];
 
+			ret = sscanf(buf + index, "%d%d%32s%n", &fileindex, &blockindex, md5code, &offset);
+			if (ret != 4)
+			{
+				break;
+			}
+			index += offset;
+
+			if (strlen(md5code) != 32)
+			{
+				continue;
+			}
+
+			if (strncmp(md5code, fileList[fileindex].block[blockindex].checksum, 32) == 0)
+			{
+				bool add = true;
+				int &numdup = fileList[fileindex].block[blockindex].numdup;
+				for (int i = 0; i < numdup; i++)
+				{
+					if (fileList[fileindex].block[blockindex].local[i] == s)
+					{
+						add = false;
+						break;
+					}
+				}
+				if (!add)
+				{
+					continue;
+				}
+				fileList[fileindex].block[blockindex].local[numdup] = s;
+				numdup++;
+			}
 		}
 
 		if (code == HE_DONT_HAVE_THIS_BLOCK)
