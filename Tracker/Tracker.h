@@ -4,30 +4,37 @@
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 
 #define TRACKER_DEFAULT_PORT 9000
+#define MAX_PEER 1024
 
 #define MAX_PEER 1024
 
 #define ERROR_CMD 0
+
 #define REGISTER 1
 #define REGISTER_SUCCESS REGISTER
 #define REGISTER_FAIL -REGISTER
+
 #define LOGIN 2
 #define LOGIN_SUCCESS LOGIN
 #define LOGIN_FAIL -LOGIN
+
 #define GET 3
 #define GET_SUCCESS GET
 #define GET_FAIL -GET
+
 #define POST 4
 #define POST_SUCCESS POST
 #define POST_FAIL -POST
-#define MAX_PEER 1024
-#define MAX_LENGTH 1024
-#define FINISH_RESPONSE 9999
 
 #define GET_ALL 1
 #define GET_ONLINE_PEER 2
 #define GET_FILE_LIST 4
 #define GET_FILE_INFORMATION 8
+
+#define NEW_FILE 1
+#define EDIT_BLOCK 2
+#define I_HAVE_A_BLOCK 3
+#define HE_DONT_HAVE_THIS_BLOCK 4
 
 
 
@@ -95,6 +102,7 @@ struct THREAD_PARAM
 struct BLOCK
 {
 	char checksum[32];
+	int numdup;
 	SOCKET local[MAX_PEER];
 };
 
@@ -105,7 +113,14 @@ struct FILE_INFO
 	char name[32];
 	unsigned length;
 	char checksum[32];
-	BLOCK block[MAX_LENGTH];
+	std::map<int, BLOCK> block;
+
+	FILE_INFO()
+	{
+		strcpy(this->name, "");
+		this->length = 0;
+		block = std::map<int, BLOCK>();
+	}
 };
 
 //Cac cau truc khac
@@ -172,7 +187,8 @@ extern LISTENER listener;
 extern USER userList;
 
 //Luu tru danh sach file
-extern std::set<FILE_INFO> fileList;
+extern std::map<int, FILE_INFO> fileList;
+extern int fileAmount;
 
 //Danh sach cac Peer dang online
 extern CONNECTION onlinePeer;
