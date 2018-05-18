@@ -19,12 +19,8 @@
 #define LOGIN_FAIL -LOGIN
 
 #define GET 3
-#define GET_SUCCESS GET
-#define GET_FAIL -GET
 
 #define POST 4
-#define POST_SUCCESS POST
-#define POST_FAIL -POST
 
 #define GET_ALL 1
 #define GET_ONLINE_PEER 2
@@ -34,7 +30,10 @@
 #define NEW_FILE 1
 #define EDIT_BLOCK 2
 #define I_HAVE_A_BLOCK 3
-#define HE_DONT_HAVE_THIS_BLOCK 4
+#define HE_HAS_THIS_BLOCK I_HAVE_A_BLOCK
+#define HE_DOESNT_HAVE_THIS_BLOCK 4
+#define ONLINE_PEER 5
+#define FILE_NAME 6
 
 
 

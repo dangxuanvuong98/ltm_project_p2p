@@ -92,6 +92,15 @@ void HandlePost(SOCKET s, OFFPACK recvPack)
 			strcpy(fileList[fileAmount].name, filename);
 			strcpy(fileList[fileAmount].checksum, md5code);
 			fileAmount++;
+
+			OFFPACK newPack;
+			newPack.cmdCode = POST;
+			sprintf(newPack.data, "%c %d %s %s", NEW_FILE, filesize, md5code, filename);
+
+			for (CONNECTION::iterator it = onlinePeer.begin(); it != onlinePeer.end(); it++)
+			{
+				SendPack(it->first, newPack, strlen(newPack.data));
+			}
 		}
 
 		if (code == EDIT_BLOCK)
@@ -122,6 +131,15 @@ void HandlePost(SOCKET s, OFFPACK recvPack)
 				strcpy(fileList[fileindex].block[blockindex].checksum, md5code);
 				fileList[fileindex].block[blockindex].numdup = 1;
 				fileList[fileindex].block[blockindex].local[0] = s;
+			}
+
+			OFFPACK newPack;
+			newPack.cmdCode = POST;
+			sprintf(newPack.data, "%c%d%d%s", EDIT_BLOCK, fileindex, blockindex, md5code);
+
+			for (CONNECTION::iterator it = onlinePeer.begin(); it != onlinePeer.end(); it++)
+			{
+				SendPack(it->first, newPack, strlen(newPack.data));
 			}
 			
 		}
@@ -162,11 +180,47 @@ void HandlePost(SOCKET s, OFFPACK recvPack)
 				fileList[fileindex].block[blockindex].local[numdup] = s;
 				numdup++;
 			}
+
+			OFFPACK newPack;
+			newPack.cmdCode = POST;
+			sprintf(newPack.data, "%c%d%d", HE_HAS_THIS_BLOCK, fileindex, blockindex);
+
+			for (CONNECTION::iterator it = onlinePeer.begin(); it != onlinePeer.end(); it++)
+			{
+				SendPack(it->first, newPack, strlen(newPack.data));
+			}
 		}
 
-		if (code == HE_DONT_HAVE_THIS_BLOCK)
+		if (code == HE_DOESNT_HAVE_THIS_BLOCK)
 		{
+			int fileindex, blockindex;
 
+			ret = sscanf(buf + index, "%d%d%n", &fileindex, &blockindex, &offset);
+			if (ret != 3)
+			{
+				break;
+			}
+			index += offset;
+
+			BLOCK &tmpBlock = fileList[fileindex].block[blockindex];
+			for (int i = 0; i < tmpBlock.numdup; i++)
+			{
+				if (tmpBlock.local[i] == s)
+				{
+					tmpBlock.numdup--;
+					tmpBlock.local[i] = tmpBlock.local[tmpBlock.numdup];
+					break;
+				}
+			}
+
+			OFFPACK newPack;
+			newPack.cmdCode = POST;
+			sprintf(newPack.data, "%c%d%d", HE_DOESNT_HAVE_THIS_BLOCK, fileindex, blockindex);
+
+			for (CONNECTION::iterator it = onlinePeer.begin(); it != onlinePeer.end(); it++)
+			{
+				SendPack(it->first, newPack, strlen(newPack.data));
+			}
 		}
 	}
 }
@@ -176,24 +230,91 @@ void HandleGet(SOCKET s, OFFPACK recvPack)
 {
 	char *buf = recvPack.data;
 	char flags = buf[0];
+	char tmpbuf[4096];
+	int index = 0;
+	int fileindex;
+	
+	OFFPACK tmpPack;
+	tmpPack.cmdCode = POST;
 
 	if (flags | GET_ALL)
 	{
+		for (CONNECTION::iterator it = onlinePeer.begin(); it != onlinePeer.end(); it++)
+		{
+			sprintf(tmpbuf, "%c%s%d", ONLINE_PEER, inet_ntoa((it->second).addr.sin_addr), (it->second).addr.sin_port);
+			if (strlen(tmpbuf) + index >= 4096)
+			{
+				SendPack(s, tmpPack, index);
+				index = 0;
+			}
+			memcpy(tmpPack.data + index, tmpbuf, strlen(tmpbuf));
+		}
 
+		for (std::map<int, FILE_INFO>::iterator it = fileList.begin(); it != fileList.end(); it++)
+		{
+			sprintf(tmpbuf, "%c%d%s%s", FILE_NAME, (it->second).length, (it->second).checksum, (it->second).name);
+			if (strlen(tmpbuf) + index >= 4096)
+			{
+				SendPack(s, tmpPack, index);
+				index = 0;
+			}
+			memcpy(tmpPack.data + index, tmpbuf, strlen(tmpbuf));
+
+			for (unsigned long int i = 0; i < fileList[fileindex].length; i++)
+			{
+				sprintf(tmpbuf, "%c%s", EDIT_BLOCK, fileList[fileindex].block[i].checksum);
+				if (strlen(tmpbuf) + index >= 4096)
+				{
+					SendPack(s, tmpPack, index);
+					index = 0;
+				}
+				memcpy(tmpPack.data + index, tmpbuf, strlen(tmpbuf));
+			}
+		}
 	}
 	
 	if (flags | GET_ONLINE_PEER)
 	{
-
+		for (CONNECTION::iterator it = onlinePeer.begin(); it != onlinePeer.end(); it++)
+		{
+			sprintf(tmpbuf, "%c%s%d", ONLINE_PEER, inet_ntoa((it->second).addr.sin_addr), (it->second).addr.sin_port);
+			if (strlen(tmpbuf) + index >= 4096)
+			{
+				SendPack(s, tmpPack, index);
+				index = 0;
+			}
+			memcpy(tmpPack.data + index, tmpbuf, strlen(tmpbuf));
+		}
 	}
 
 	if (flags | GET_FILE_LIST)
 	{
-
+		for (std::map<int, FILE_INFO>::iterator it = fileList.begin(); it != fileList.end(); it++)
+		{
+			sprintf(tmpbuf, "%c%d%s%s", FILE_NAME, (it->second).length, (it->second).checksum, (it->second).name);
+			if (strlen(tmpbuf) + index >= 4096)
+			{
+				SendPack(s, tmpPack, index);
+				index = 0;
+			}
+			memcpy(tmpPack.data + index, tmpbuf, strlen(tmpbuf));
+		}
 	}
 
 	if (flags | GET_FILE_INFORMATION)
 	{
-
+		sscanf(buf + 1, "%d", &fileindex);
+		for (unsigned long int i = 0; i < fileList[fileindex].length; i++)
+		{
+			sprintf(tmpbuf, "%c%s", EDIT_BLOCK, fileList[fileindex].block[i].checksum);
+			if (strlen(tmpbuf) + index >= 4096)
+			{
+				SendPack(s, tmpPack, index);
+				index = 0;
+			}
+			memcpy(tmpPack.data + index, tmpbuf, strlen(tmpbuf));
+		}
 	}
+
+	SendPack(s, tmpPack, index);
 }

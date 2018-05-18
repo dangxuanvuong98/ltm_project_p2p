@@ -45,7 +45,7 @@ void rsaenc(char * ori, char * enc, unsigned long long int *key, unsigned long i
 	unsigned short int *a = (unsigned short int *)ori;
 	unsigned long int *b = (unsigned long int *)enc;
 	unsigned long int l = len / 2;
-	for (int i = 0; i < l; i++)
+	for (unsigned long int i = 0; i < l; i++)
 	{
 		b[i] = encrypt(key[0], key[1], a[i]);
 	}
@@ -56,7 +56,7 @@ void rsadec(char * enc, char * ori, unsigned long long int *key, unsigned long i
 	unsigned long int *a = (unsigned long int *)enc;
 	unsigned short int *b = (unsigned short int *)ori;
 	unsigned long int l = len / 4;
-	for (int i = 0; i < l; i++)
+	for (unsigned long int i = 0; i < l; i++)
 	{
 		b[i] = decrypt(key[0], key[2], a[i]);
 	}
