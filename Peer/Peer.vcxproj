@@ -156,10 +156,10 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="toTracker.cpp" />
-    <ClCompile Include="toPeer.cpp" />
-    <ClCompile Include="RequestProcessing.cpp" />
-    <ClCompile Include="IO.cpp" />
+    <ClCompile Include="RequestControl.cpp" />
+    <ClCompile Include="ConnectionControl.cpp" />
+    <ClCompile Include="HandleRequest.cpp" />
+    <ClCompile Include="HandleIO.cpp" />
     <ClCompile Include="md5.cpp" />
     <ClCompile Include="Peer.cpp" />
     <ClCompile Include="rsa.cpp" />

@@ -127,6 +127,4 @@ void Disconnect(SOCKET s)
 	closesocket(s);
 
 	LeaveCriticalSection(&criticalSection);
-	
-
 }

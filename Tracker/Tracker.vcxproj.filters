@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="IO File">
-      <UniqueIdentifier>{a7353c22-c0cd-4477-a438-dc078ac889d4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Encryption">
       <UniqueIdentifier>{61d8fafd-1bc0-477d-a52a-d8e532def272}</UniqueIdentifier>
     </Filter>
@@ -77,13 +74,5 @@
     <ClCompile Include="RequestControl.cpp">
       <Filter>Source Files\Connection</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="trackerdata.UserInformation.dat">
-      <Filter>IO File</Filter>
-    </None>
-    <None Include="trackerdata.GroupInformation.dat">
-      <Filter>IO File</Filter>
-    </None>
   </ItemGroup>
 </Project>

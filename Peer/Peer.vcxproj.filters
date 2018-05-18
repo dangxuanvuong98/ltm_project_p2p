@@ -56,23 +56,23 @@
     <ClCompile Include="Peer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IO.cpp">
-      <Filter>Source Files\Handler</Filter>
-    </ClCompile>
-    <ClCompile Include="RequestProcessing.cpp">
-      <Filter>Source Files\Handler</Filter>
-    </ClCompile>
     <ClCompile Include="md5.cpp">
       <Filter>Source Files\Encryption</Filter>
     </ClCompile>
     <ClCompile Include="rsa.cpp">
       <Filter>Source Files\Encryption</Filter>
     </ClCompile>
-    <ClCompile Include="toTracker.cpp">
+    <ClCompile Include="ConnectionControl.cpp">
       <Filter>Source Files\Connection</Filter>
     </ClCompile>
-    <ClCompile Include="toPeer.cpp">
+    <ClCompile Include="RequestControl.cpp">
       <Filter>Source Files\Connection</Filter>
+    </ClCompile>
+    <ClCompile Include="HandleIO.cpp">
+      <Filter>Source Files\Handler</Filter>
+    </ClCompile>
+    <ClCompile Include="HandleRequest.cpp">
+      <Filter>Source Files\Handler</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

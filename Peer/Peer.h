@@ -4,40 +4,50 @@
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 
 #define TRACKER_DEFAULT_PORT 9000
+#define MAX_PEER 1024
 
 #define MAX_PEER 1024
 
 #define ERROR_CMD 0
+
 #define REGISTER 1
 #define REGISTER_SUCCESS REGISTER
 #define REGISTER_FAIL -REGISTER
+
 #define LOGIN 2
 #define LOGIN_SUCCESS LOGIN
 #define LOGIN_FAIL -LOGIN
+
 #define GET 3
-#define GET_SUCCESS GET
-#define GET_FAIL -GET
+
 #define POST 4
-#define POST_SUCCESS POST
-#define POST_FAIL -POST
-#define MAX_PEER 1024
-#define MAX_LENGTH 1024
-#define FINISH_RESPONSE 9999
 
 #define GET_ALL 1
 #define GET_ONLINE_PEER 2
 #define GET_FILE_LIST 4
 #define GET_FILE_INFORMATION 8
 
-//Include headers
+#define NEW_FILE 1
+#define EDIT_BLOCK 2
+#define I_HAVE_A_BLOCK 3
+#define HE_HAS_THIS_BLOCK I_HAVE_A_BLOCK
+#define HE_DOESNT_HAVE_THIS_BLOCK 4
+#define ONLINE_PEER 5
+#define FILE_NAME 6
+
+
+
+//Include Headers
 #include "stdc++.h"
 #include "md5.h"
 #include "rsa.h"
 #include <WinSock2.h>
-#include <WS2tcpip.h>
 #include <Windows.h>
 
+
 //Define Datatypes
+
+//Define cac cau truc goi tin:
 
 //OFFPACK - Goi tin chua duoc ma hoa/ da duoc giai ma - duoc su dung noi bo
 struct OFFPACK
@@ -69,12 +79,12 @@ struct NODE
 typedef std::map<SOCKET, NODE> CONNECTION;
 
 //Define cau truc du lieu de luu tru thong tin listener
-struct LISTENER
+typedef struct
 {
-	SOCKET s;
+	SOCKET toTrackerSocket, toPeerSocket;
 	SOCKADDR_IN addr;
 	unsigned long long int rsaKey[3];
-};
+} CONNECTOR;
 
 //Define cau truc du lieu de truyen vao luong xu ly moi
 //Bien pause khien luong cu tam dung cho den khi luong duoc tao nhan duoc thong tin ve socket
@@ -91,6 +101,7 @@ struct THREAD_PARAM
 struct BLOCK
 {
 	char checksum[32];
+	int numdup;
 	SOCKET local[MAX_PEER];
 };
 
@@ -101,40 +112,76 @@ struct FILE_INFO
 	char name[32];
 	unsigned length;
 	char checksum[32];
-	BLOCK block[MAX_LENGTH];
+	std::map<int, BLOCK> block;
+
+	FILE_INFO()
+	{
+		strcpy(this->name, "");
+		this->length = 0;
+		block = std::map<int, BLOCK>();
+	}
 };
 
-struct NODE
-{
-	SOCKET socket;
-	SOCKADDR_IN addr;
-	char sessionKey[16];
-	unsigned long long int rsaKey[3];
-};
+//Cac cau truc khac
+
+//Cau truc luu truc thong tin nguoi dung: map tu tai khoan sang mat khau
+typedef std::map<std::string, std::string> USER;
 
 //Declare Functions
-void GoOnline();
-void ApplicationUI();
 
-void HandleLogin();
-void HandleRegister();
+//Overload operator
 
-void SendPack(NODE node, int cmd, char *buf, int len);
-OFFLINE_PACKAGE RecvPack(NODE sourcenode);
+//Overload toan tu nho hon cho cau truc FILE_INFO
+bool operator<(FILE_INFO lhs, FILE_INFO rhs);
 
-int InitConnectionToTracker();
-void ConnectionFromPeer(NODE newNode);
-int ConnectionToPeer(NODE peer);
+//Declare cac ham phu trach viec ket noi
+
+//InitPeer - Khoi tao peer, dua peer vao trang thai san sang lam viec
+void InitConnector(CONNECTOR &connector);
+//WaitForNewConnection - Cho doi ket noi moi, yeu cau dang nhap va gui thong tin dang nhap den cac Peer khac
+DWORD WINAPI WaitForNewConnection(LPVOID lpParam);
+//WaitForRequest - Cho doi request tu cac peer da dang nhap va gui thong tin den cac peer con lai
+DWORD WINAPI WaitForRequest(LPVOID lpParam);
+//Thiet lap ket noi ban dau giua peer va tracker
+DWORD WINAPI SetupConnection(LPVOID lpParam);
+//Dieu huong xu ly request
+DWORD WINAPI RequestControl(LPVOID lpParam);
+//Huy ket noi voi mot socket
+void Disconnect(SOCKET s);
+
+
+//Declare cac ham vao ra
+
+//SendPack - Ma hoa mot OFFPACK thanh ONLPACK va gui den dia chi dich
+void SendPack(SOCKET s, OFFPACK sendPack, int len);
+//RecvPack - Nhan mot ONLPACK va giai ma thanh OFFPACK
+int RecvPack(SOCKET s, OFFPACK &recvPack);
+
+//Declare cac ham ma hoa rsa
+
+//Tao bo key RSA
+int CreateKey(unsigned long long int *rsaKey);
+//Ma hoa buf ori co chieu dai len thanh buf enc voi bo ma hoa key
+void rsaenc(char * ori, char * enc, unsigned long long int * key, unsigned long int len);
+//Giai ma buf enc co chieu dai len thanh buf ori voi bo ma hoa key
+void rsadec(char * enc, char * ori, unsigned long long int * key, unsigned long int len);
+
+
 
 //Declare Extern Variables
-extern SOCKADDR_IN trackerAddr;
-extern SOCKADDR_IN peerAddr;
 
-extern SOCKET toTrackerSocket;
-extern SOCKET toPeerSocket;
+//Luu tru danh sach file
+extern std::map<int, FILE_INFO> fileList;
+extern int fileAmount;
 
-extern FILE *peerLog;
+//Danh sach cac Peer dang online
+extern CONNECTION onlinePeer;
 
-extern char myRegKey[32];
+//Tong so peer dang online
+extern int onlinePeerAmount;
 
-extern NODE toTracker, myNode;
+//Thong tin listerner: Dia chi, socket, bo ma hoa
+extern CONNECTOR connector;
+
+//Khoa CS
+extern CRITICAL_SECTION criticalSection;

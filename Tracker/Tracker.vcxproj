@@ -170,10 +170,6 @@
     </ClCompile>
     <ClCompile Include="Tracker.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="trackerdata.GroupInformation.dat" />
-    <None Include="trackerdata.UserInformation.dat" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
