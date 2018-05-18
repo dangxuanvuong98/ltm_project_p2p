@@ -53,9 +53,6 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Peer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="md5.cpp">
       <Filter>Source Files\Encryption</Filter>
     </ClCompile>
@@ -72,6 +69,15 @@
       <Filter>Source Files\Handler</Filter>
     </ClCompile>
     <ClCompile Include="HandleRequest.cpp">
+      <Filter>Source Files\Handler</Filter>
+    </ClCompile>
+    <ClCompile Include="Peer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HandleNotification.cpp">
       <Filter>Source Files\Handler</Filter>
     </ClCompile>
   </ItemGroup>

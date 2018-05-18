@@ -19,8 +19,12 @@
 #define LOGIN_FAIL -LOGIN
 
 #define GET 3
-
 #define POST 4
+#define CONNECT 5
+#define DISCONNECT -CONNECT
+#define CHAT 7
+#define LOG 8
+#define CMD 6
 
 #define GET_ALL 1
 #define GET_ONLINE_PEER 2
@@ -34,6 +38,10 @@
 #define HE_DOESNT_HAVE_THIS_BLOCK 4
 #define ONLINE_PEER 5
 #define FILE_NAME 6
+
+#define REQUEST_INTERFACE 0
+#define CHAT_INTERFACE 1
+#define LISTENER_INTERFACE 2
 
 
 
@@ -138,16 +146,21 @@ bool operator<(FILE_INFO lhs, FILE_INFO rhs);
 
 //InitPeer - Khoi tao peer, dua peer vao trang thai san sang lam viec
 void InitConnector(CONNECTOR &connector);
-//WaitForNewConnection - Cho doi ket noi moi, yeu cau dang nhap va gui thong tin dang nhap den cac Peer khac
-DWORD WINAPI WaitForNewConnection(LPVOID lpParam);
-//WaitForRequest - Cho doi request tu cac peer da dang nhap va gui thong tin den cac peer con lai
-DWORD WINAPI WaitForRequest(LPVOID lpParam);
+//Ham cho doi cac thong bao tu tracker
+DWORD WINAPI ListenToTracker(LPVOID lpParam);
+//Ham cho doi cac request tu Peer
+DWORD WINAPI ListenToPeer(LPVOID lpParam);
 //Thiet lap ket noi ban dau giua peer va tracker
-DWORD WINAPI SetupConnection(LPVOID lpParam);
+void SetupConnection(LPVOID lpParam);
 //Dieu huong xu ly request
 DWORD WINAPI RequestControl(LPVOID lpParam);
 //Huy ket noi voi mot socket
 void Disconnect(SOCKET s);
+//Giao dien nguoi dung
+void UserInterface();
+int RequestInterface();
+int ChatInterface();
+int ListenerInterface();
 
 
 //Declare cac ham vao ra
@@ -165,6 +178,20 @@ int CreateKey(unsigned long long int *rsaKey);
 void rsaenc(char * ori, char * enc, unsigned long long int * key, unsigned long int len);
 //Giai ma buf enc co chieu dai len thanh buf ori voi bo ma hoa key
 void rsadec(char * enc, char * ori, unsigned long long int * key, unsigned long int len);
+
+//Declare cac ham xu ly
+
+//Ham xu ly tin hieu chat
+void HandleChat();
+//Ham xu ly yeu cau file
+void HandleGetFile();
+//Ham xu ly cac thong bao tu tracker
+void HandleNotification();
+
+//Declare cac ham khac
+
+//Ham trans cmd tu char* -> int
+int cmdtrans(char *buf);
 
 
 
