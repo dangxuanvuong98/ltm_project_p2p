@@ -45,6 +45,9 @@
 #define CHAT_INTERFACE 1
 #define LISTENER_INTERFACE 2
 
+#define CHAT_REQUEST 1
+#define GET_FILE_REQUEST 2
+
 
 
 //Include Headers
@@ -155,8 +158,10 @@ DWORD WINAPI ListenToTracker(LPVOID lpParam);
 //Ham cho doi cac request tu Peer
 DWORD WINAPI ListenToPeer(LPVOID lpParam);
 //Thiet lap ket noi ban dau giua peer va tracker
-void SetupConnection(LPVOID lpParam);
+DWORD WINAPI SetupConnection(LPVOID lpParam);
 //Dieu huong xu ly request
+DWORD WINAPI RequestControl(LPVOID lpParam);
+//Xu ly mot request moi
 DWORD WINAPI RequestControl(LPVOID lpParam);
 //Huy ket noi voi mot socket
 void Disconnect(SOCKET s);
@@ -187,9 +192,9 @@ void rsadec(char * enc, char * ori, unsigned long long int * key, unsigned long 
 //Declare cac ham xu ly
 
 //Ham xu ly tin hieu chat
-void HandleChat();
+void HandleChat(char *buf);
 //Ham xu ly yeu cau file
-void HandleGetFile();
+void HandleGetFile(char *buf);
 //Ham xu ly cac thong bao tu tracker
 void NotificationControl(OFFPACK *recvPack);
 
@@ -209,6 +214,9 @@ extern int fileAmount;
 //Danh sach cac Peer dang online
 extern CONNECTION onlinePeer;
 
+//Tracker
+extern NODE trackerNode;
+
 //Tong so peer dang online
 extern int onlinePeerAmount;
 
@@ -223,3 +231,5 @@ extern int IC;
 extern BUFFER responseBuffer;
 extern BUFFER chatBuffer;
 extern BUFFER requsetBuffer;
+
+extern bool connected;

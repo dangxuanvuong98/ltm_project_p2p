@@ -8,6 +8,11 @@ DWORD WINAPI ListenToTracker(LPVOID lpParam)
 
 	while (true)
 	{
+		if (!connected)
+		{
+			continue;
+		}
+
 		RecvPack(connector.toTrackerSocket, recvPack);
 
 		buf = recvPack.data;

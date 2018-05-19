@@ -23,9 +23,10 @@ int RecvPack(SOCKET s, OFFPACK &recvPack)
 	memset(&encryptPack, 0, sizeof(encryptPack));
 
 	unsigned long int ret = recv(s, (char *)&encryptPack, sizeof(encryptPack), 0);
-	if (ret == SOCKET_ERROR)
+	if (ret == SOCKET_ERROR || ret >= sizeof(ONLPACK))
 	{
 		Disconnect(s);
+		return -1;
 	}
 
 	memset(&recvPack, 0, sizeof(recvPack));

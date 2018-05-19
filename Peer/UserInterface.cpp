@@ -52,14 +52,34 @@ int RequestInterface()
 			char addr_a[32];
 			int port;
 			int ret = sscanf(buf + index, "%32s%d", addr_a, &port);
+			if (ret != 1 && ret != 2)
+			{
+				printf("Tham so khong hop le!\n");
+				break;
+			}
+
 			if (ret == 1)
 			{
-				continue;
+				port = 9000;
 			}
-			if (ret == 2)
+
+			trackerNode.addr.sin_addr.s_addr = inet_addr(addr_a);
+			trackerNode.addr.sin_family = AF_INET;
+			trackerNode.addr.sin_port = htons(port);
+
+			ret = connect(connector.toTrackerSocket, (SOCKADDR FAR*)&trackerNode.addr, sizeof(trackerNode.addr));
+
+			if (ret == 0)
 			{
-				continue;
+				connected = true;
+				printf("Ket noi thanh cong\n");
+				CreateThread(0, 0, SetupConnection, NULL, 0, 0);
 			}
+			else
+			{
+				printf("Ket noi that bai\n");
+			}
+			break;
 		}
 		case REGISTER:
 		{
@@ -76,6 +96,10 @@ int RequestInterface()
 		case POST:
 		{
 
+		}
+		default:
+		{
+			printf("Khong ton tai cau lenh\n");
 		}
 		}
 	}
@@ -149,7 +173,7 @@ void ResponseNotification(char *buf)
 {
 	if (IC == REQUEST_INTERFACE)
 	{
-		cout << buf << endl;
+		//cout << buf << endl;
 	}
 	else
 	{

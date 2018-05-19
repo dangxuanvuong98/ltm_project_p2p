@@ -26,6 +26,7 @@ int RecvPack(SOCKET s, OFFPACK &recvPack)
 	if (ret == SOCKET_ERROR)
 	{
 		Disconnect(s);
+		return -1;
 	}
 
 	memset(&recvPack, 0, sizeof(recvPack));

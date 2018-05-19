@@ -26,15 +26,27 @@ DWORD WINAPI WaitForRequest(LPVOID lpParam)
 
 		ret = select(0, &readfds, NULL, NULL, NULL);
 
-		for (it = onlinePeer.begin(); it != onlinePeer.end(); it++)
+		if (ret > 0)
 		{
-			if (FD_ISSET(it->first, &readfds))
+			for (unsigned i = 0; i < readfds.fd_count; i++)
 			{
 				newRequest.pause = true;
-				newRequest.s = it->first;
+				newRequest.s = readfds.fd_array[i];
 				CreateThread(0, 0, RequestControl, &newRequest, 0, 0);
 				while (newRequest.pause);
 			}
+			/*EnterCriticalSection(&criticalSection);
+			for (it = onlinePeer.begin(); it != onlinePeer.end(); it++)
+			{
+				if (FD_ISSET(it->first, &readfds))
+				{
+					newRequest.pause = true;
+					newRequest.s = it->first;
+					CreateThread(0, 0, RequestControl, &newRequest, 0, 0);
+					while (newRequest.pause);
+				}
+			}
+			//LeaveCriticalSection(&criticalSection);*/
 		}
 	}
 }
