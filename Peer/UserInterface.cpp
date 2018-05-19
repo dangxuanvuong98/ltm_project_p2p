@@ -2,7 +2,7 @@
 
 void UserInterface()
 {
-	int IC = REQUEST_INTERFACE;
+	IC = REQUEST_INTERFACE;
 	
 	while (true)
 	{
@@ -140,5 +140,19 @@ int cmdtrans(char *buf)
 	if (strcmp(buf, "cmd") == 0)
 	{
 		return CMD;
+	}
+
+	return ERROR_CMD;
+}
+
+void ResponseNotification(char *buf)
+{
+	if (IC == REQUEST_INTERFACE)
+	{
+		cout << buf << endl;
+	}
+	else
+	{
+		responseBuffer.push_back(buf);
 	}
 }

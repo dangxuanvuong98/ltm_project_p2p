@@ -65,6 +65,7 @@ DWORD WINAPI WaitForNewConnection(LPVOID lpParam)
 		onlinePeer[newConnection.s].connecting = true;
 		newConnection.pause = true;
 		printf("Co mot ket noi moi %s:%d\n", inet_ntoa(newPeer.addr.sin_addr), ntohs(newPeer.addr.sin_port));
+
 		CreateThread(0, 0, SetupConnection, &newConnection, 0, 0);
 		while (newConnection.pause);
 	}
@@ -113,6 +114,20 @@ DWORD WINAPI SetupConnection(LPVOID lpParam)
 	onlinePeer[s].connecting = false;
 
 	LeaveCriticalSection(&criticalSection);
+
+	char sendbuf[4096];
+	int offset;
+	sprintf(sendbuf, "%d%s%d%llu%llu%s%n", AF_INET, inet_ntoa(onlinePeer[s].addr.sin_addr), onlinePeer[s].addr.sin_port,
+		onlinePeer[s].rsaKey[0], onlinePeer[s].rsaKey[1], onlinePeer[s].username, &offset);
+	OFFPACK sendPack;
+	sendPack.cmdCode = POST;
+	memcpy(sendPack.data, sendbuf, offset);
+
+	for (int i = 0; i < onlinePeerAmount; i++)
+	{
+		if (i != s)
+			SendPack(i, sendPack, offset);
+	}
 
 	return 0;
 }

@@ -80,5 +80,8 @@
     <ClCompile Include="HandleNotification.cpp">
       <Filter>Source Files\Handler</Filter>
     </ClCompile>
+    <ClCompile Include="NotificationControl.cpp">
+      <Filter>Source Files\Connection</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

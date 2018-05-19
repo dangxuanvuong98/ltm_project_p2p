@@ -157,6 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HandleNotification.cpp" />
+    <ClCompile Include="NotificationControl.cpp" />
     <ClCompile Include="RequestControl.cpp" />
     <ClCompile Include="ConnectionControl.cpp" />
     <ClCompile Include="HandleRequest.cpp" />

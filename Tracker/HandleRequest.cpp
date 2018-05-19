@@ -58,7 +58,8 @@ void HandlePost(SOCKET s, OFFPACK recvPack)
 	char *buf = recvPack.data;
 	int index = 0;
 	char code;
-	int ret, offset;
+	int ret;
+	int offset;
 	
 	while (true)
 	{
@@ -95,7 +96,7 @@ void HandlePost(SOCKET s, OFFPACK recvPack)
 
 			OFFPACK newPack;
 			newPack.cmdCode = POST;
-			sprintf(newPack.data, "%c %d %s %s", NEW_FILE, filesize, md5code, filename);
+			sprintf(newPack.data, "%c %d %d %s %s", NEW_FILE, fileAmount-1, filesize, md5code, filename);
 
 			for (CONNECTION::iterator it = onlinePeer.begin(); it != onlinePeer.end(); it++)
 			{
@@ -136,6 +137,13 @@ void HandlePost(SOCKET s, OFFPACK recvPack)
 			OFFPACK newPack;
 			newPack.cmdCode = POST;
 			sprintf(newPack.data, "%c%d%d%s", EDIT_BLOCK, fileindex, blockindex, md5code);
+
+			for (CONNECTION::iterator it = onlinePeer.begin(); it != onlinePeer.end(); it++)
+			{
+				SendPack(it->first, newPack, strlen(newPack.data));
+			}
+
+			sprintf(newPack.data, "%c%d,%d%d", HE_HAS_THIS_BLOCK, s, fileindex, blockindex);
 
 			for (CONNECTION::iterator it = onlinePeer.begin(); it != onlinePeer.end(); it++)
 			{
@@ -183,7 +191,9 @@ void HandlePost(SOCKET s, OFFPACK recvPack)
 
 			OFFPACK newPack;
 			newPack.cmdCode = POST;
-			sprintf(newPack.data, "%c%d%d", HE_HAS_THIS_BLOCK, fileindex, blockindex);
+			sprintf(newPack.data, "%c%s%d%d%d", HE_HAS_THIS_BLOCK, inet_ntoa(onlinePeer[s].addr.sin_addr),
+				onlinePeer[s].addr.sin_port,
+				fileindex, blockindex);
 
 			for (CONNECTION::iterator it = onlinePeer.begin(); it != onlinePeer.end(); it++)
 			{
@@ -215,7 +225,9 @@ void HandlePost(SOCKET s, OFFPACK recvPack)
 
 			OFFPACK newPack;
 			newPack.cmdCode = POST;
-			sprintf(newPack.data, "%c%d%d", HE_DOESNT_HAVE_THIS_BLOCK, fileindex, blockindex);
+			sprintf(newPack.data, "%c%s%d%d%d", HE_DOESNT_HAVE_THIS_BLOCK, inet_ntoa(onlinePeer[s].addr.sin_addr),
+				onlinePeer[s].addr.sin_port,
+				fileindex, blockindex);
 
 			for (CONNECTION::iterator it = onlinePeer.begin(); it != onlinePeer.end(); it++)
 			{

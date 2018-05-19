@@ -38,6 +38,7 @@
 #define HE_DOESNT_HAVE_THIS_BLOCK 4
 #define ONLINE_PEER 5
 #define FILE_NAME 6
+#define NEW_PEER 7
 
 #define REQUEST_INTERFACE 0
 #define CHAT_INTERFACE 1
@@ -132,8 +133,10 @@ struct FILE_INFO
 
 //Cac cau truc khac
 
-//Cau truc luu truc thong tin nguoi dung: map tu tai khoan sang mat khau
+//Cau truc luu tru thong tin nguoi dung: map tu tai khoan sang mat khau
 typedef std::map<std::string, std::string> USER;
+//Cau truc luu tru cac thong bao chua duoc hien thi
+typedef std::vector<std::string> BUFFER;
 
 //Declare Functions
 
@@ -161,6 +164,7 @@ void UserInterface();
 int RequestInterface();
 int ChatInterface();
 int ListenerInterface();
+void ResponseNotification(char *buf);
 
 
 //Declare cac ham vao ra
@@ -186,7 +190,7 @@ void HandleChat();
 //Ham xu ly yeu cau file
 void HandleGetFile();
 //Ham xu ly cac thong bao tu tracker
-void HandleNotification();
+void NotificationControl(OFFPACK *recvPack);
 
 //Declare cac ham khac
 
@@ -212,3 +216,9 @@ extern CONNECTOR connector;
 
 //Khoa CS
 extern CRITICAL_SECTION criticalSection;
+
+extern int IC;
+
+extern BUFFER responseBuffer;
+extern BUFFER chatBuffer;
+extern BUFFER requsetBuffer;
