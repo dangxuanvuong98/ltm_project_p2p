@@ -117,7 +117,7 @@ DWORD WINAPI SetupConnection(LPVOID lpParam)
 
 	char sendbuf[4096];
 	int offset;
-	sprintf(sendbuf, "%d%s%d%llu%llu%s%n", AF_INET, inet_ntoa(onlinePeer[s].addr.sin_addr), onlinePeer[s].addr.sin_port,
+	sprintf(sendbuf, "%d%d%s%d%llu%llu%s%n", NEW_PEER, AF_INET, inet_ntoa(onlinePeer[s].addr.sin_addr), onlinePeer[s].addr.sin_port,
 		onlinePeer[s].rsaKey[0], onlinePeer[s].rsaKey[1], onlinePeer[s].username, &offset);
 	OFFPACK sendPack;
 	sendPack.cmdCode = POST;
@@ -142,4 +142,18 @@ void Disconnect(SOCKET s)
 	closesocket(s);
 
 	LeaveCriticalSection(&criticalSection);
+
+	char sendbuf[4096];
+	int offset;
+	sprintf(sendbuf, "%d%d%s%d%llu%llu%s%n", PEER_DISCONNECT, AF_INET, inet_ntoa(onlinePeer[s].addr.sin_addr), onlinePeer[s].addr.sin_port,
+		onlinePeer[s].rsaKey[0], onlinePeer[s].rsaKey[1], onlinePeer[s].username, &offset);
+	OFFPACK sendPack;
+	sendPack.cmdCode = POST;
+	memcpy(sendPack.data, sendbuf, offset);
+
+	for (int i = 0; i < onlinePeerAmount; i++)
+	{
+		if (i != s)
+			SendPack(i, sendPack, offset);
+	}
 }

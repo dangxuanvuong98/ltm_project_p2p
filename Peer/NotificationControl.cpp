@@ -193,5 +193,32 @@ void NotificationControl(OFFPACK *recvPack)
 			onlinePeer[onlinePeerAmount] = newPeer;
 			onlinePeerAmount++;
 		}
+
+		if (code == PEER_DISCONNECT)
+		{
+			int family;
+			char addr[32];
+			int port;
+			unsigned long long int rsaKey[2];
+			char username[32];
+
+			ret = sscanf(buf + index, "%d%s%d%llu%llu%s%n", &family, addr, &port, &rsaKey[0], &rsaKey[1], username, &offset);
+			if (ret != 7)
+			{
+				break;
+			}
+			index += offset;
+
+			for (int i = 0; i < onlinePeerAmount; i++)
+			{
+				if (strcmp(inet_ntoa(onlinePeer[i].addr.sin_addr), addr) == 0
+					&& onlinePeer[i].addr.sin_port == port)
+				{
+					onlinePeerAmount--;
+					onlinePeer[i] = onlinePeer[onlinePeerAmount];
+					break;
+				}
+			}
+		}
 	}
 }

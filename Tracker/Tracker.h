@@ -34,6 +34,8 @@
 #define HE_DOESNT_HAVE_THIS_BLOCK 4
 #define ONLINE_PEER 5
 #define FILE_NAME 6
+#define NEW_PEER 7
+#define PEER_DISCONNECT -NEW_PEER
 
 
 

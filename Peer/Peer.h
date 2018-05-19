@@ -39,6 +39,7 @@
 #define ONLINE_PEER 5
 #define FILE_NAME 6
 #define NEW_PEER 7
+#define PEER_DISCONNECT -NEW_PEER
 
 #define REQUEST_INTERFACE 0
 #define CHAT_INTERFACE 1
