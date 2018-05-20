@@ -1,5 +1,2 @@
-﻿  stdafx.cpp
-e:\data\tkv source & media\source\my source\code\study at hust\lap trinh mang\github\ltm_project_p2p\backup\peer\stdafx.cpp(140): warning C4101: 'length': unreferenced local variable
-e:\data\tkv source & media\source\my source\code\study at hust\lap trinh mang\github\ltm_project_p2p\backup\peer\stdafx.cpp(280): warning C4101: 'length': unreferenced local variable
-  Peer.cpp
+﻿  Peer.cpp
   Peer.vcxproj -> E:\DATA\TKV Source & Media\Source\My Source\Code\Study at HUST\Lap trinh mang\Github\ltm_project_p2p\Backup\Debug\Peer.exe
