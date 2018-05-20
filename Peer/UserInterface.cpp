@@ -72,7 +72,7 @@ int RequestInterface()
 			if (ret == 0)
 			{
 				connected = true;
-				printf("Ket noi thanh cong\n");
+				printf("Ket noi thanh cong!\n");
 				CreateThread(0, 0, SetupConnection, NULL, 0, 0);
 			}
 			else
@@ -83,19 +83,41 @@ int RequestInterface()
 		}
 		case REGISTER:
 		{
-
+			char user[32], pass[32];
+			int ret = sscanf(buf + index, "%31s%31s", user, pass);
+			if (ret != 2)
+			{
+				printf("Nhap thieu tham so!\n");
+			}
+			OFFPACK sendPack;
+			sendPack.cmdCode = REGISTER;
+			sprintf(sendPack.data, "%s %s", user, pass);
+			SendPack(connector.toTrackerSocket, sendPack, strlen(sendPack.data));
+			SendPack(connector.toTrackerSocket, sendPack, strlen(sendPack.data));
+			break;
 		}
 		case LOGIN:
 		{
-
+			char user[32], pass[32];
+			int ret = sscanf(buf + index, "%31s%31s", user, pass);
+			if (ret != 2)
+			{
+				printf("Nhap thieu tham so!\n");
+			}
+			OFFPACK sendPack;
+			sendPack.cmdCode = LOGIN;
+			sprintf(sendPack.data, "%s %s", user, pass);
+			SendPack(connector.toTrackerSocket, sendPack, strlen(sendPack.data));
+			SendPack(connector.toTrackerSocket, sendPack, strlen(sendPack.data));
+			break;
 		}
 		case GET:
 		{
-
+			break;
 		}
 		case POST:
 		{
-
+			break;
 		}
 		default:
 		{
@@ -173,7 +195,7 @@ void ResponseNotification(char *buf)
 {
 	if (IC == REQUEST_INTERFACE)
 	{
-		//cout << buf << endl;
+		printf("%s", buf);
 	}
 	else
 	{
