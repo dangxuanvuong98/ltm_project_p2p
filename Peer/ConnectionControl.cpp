@@ -46,15 +46,15 @@ DWORD WINAPI SetupConnection(LPVOID lpParam)
 	FD_ZERO(&readfds);
 	FD_SET(connector.toTrackerSocket, &readfds);
 
-	int ret = select(0, &readfds, NULL, NULL, NULL);
+	/*int ret = select(0, &readfds, NULL, NULL, NULL);
 	if (ret <= 0)
 	{
 		Disconnect(connector.toTrackerSocket);
 		connected = false;
 		return 0;
-	}
+	}*/
 
-	ret = recv(connector.toTrackerSocket, buf, sizeof(buf), 0);
+	int ret = recv(connector.toTrackerSocket, buf, sizeof(buf), 0);
 	if (ret != 16)
 	{
 		Disconnect(connector.toTrackerSocket);
@@ -67,8 +67,6 @@ DWORD WINAPI SetupConnection(LPVOID lpParam)
 	memcpy(buf, (char *)(connector.rsaKey), 16);
 	memcpy(buf + 16, (char *)(&connector.addr.sin_port), 2);
 	send(connector.toTrackerSocket, buf, 18, 0);
-
-	connected = true;
 
 	return 0;
 }

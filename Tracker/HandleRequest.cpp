@@ -12,7 +12,6 @@ void HandleRegister(SOCKET s, OFFPACK recvPack)
 		userList[user] = pass;
 		response.cmdCode = REGISTER_SUCCESS;
 		sprintf(response.data, "Dang ky thanh cong");
-		printf("Tai khoan %s da duoc tao\n", user);
 	}
 	else
 	{
@@ -42,7 +41,6 @@ void HandleLogin(SOCKET s, OFFPACK recvPack)
 		{
 			response.cmdCode = LOGIN;
 			sprintf(response.data, "Dang nhap thanh cong");
-			printf("Tai khoan %s da dang nhap\n", user);
 		}
 		else
 		{
